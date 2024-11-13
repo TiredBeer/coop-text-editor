@@ -1,0 +1,24 @@
+ABOBAabobaABOBAabobaABOBAabobaABOBAabobaABOBAaboba
+ABOBAabobaABOBAabobaABOBAaboba
+ABOBAabobaABOBAabobaABOBAabobaABOBAabobaABOBAaboba
+ABOBAabobaABOBAabobaABOBAaboba
+ABOBAabobaABOBAabobaABOBAabobaABOBAabobaABOBAaboba
+
+
+
+file.txt - клиент выбрал этот файл
+отправил на серв инфу об этом
+на сервер отправилось сообщение
+
+OPEN
+file.txt
+
+
+клиент нажал на кнопку
+отправил сообщение на сервер
+
+KEY
+131
+15;31
+
+
