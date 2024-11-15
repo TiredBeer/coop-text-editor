@@ -19,7 +19,7 @@ class Server:
             conn, addr = self.server_socket.accept()
             client_info = ClientInfo(conn)
             self.clients[addr] = client_info
-            threading.Thread(target=self.handle_client, args=client_info).start()
+            threading.Thread(target=self.handle_client, args=[client_info]).start()
 
     def handle_client(self, client_info):
         while True:
@@ -33,6 +33,7 @@ class Server:
                     filename = data[1]
                     client_info.filename = filename
                 case('KEY'):
+                    print('key')
                     pass
 
     def open_file(self, filename):
