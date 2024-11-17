@@ -35,7 +35,7 @@ class Server:
                     file_index = int(data[1])
                     client_info.filename = self.filenames[file_index]
                     file_content = self.open_file(client_info.filename)
-                    print('kek')
+                    client_info.client_socket.sendall(''.join(file_content).encode())
                 case('KEY'):
                     print('key')
                     pass
