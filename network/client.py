@@ -1,3 +1,8 @@
+import sys
+import os
+
+# Добавляем корневую директорию проекта в путь поиска модулей
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import socket
 import threading
 from data.text_buffer import TextBuffer
@@ -23,7 +28,7 @@ class Client:
                     break
                 response = data.decode()
                 print(f'Client: Получен ответ: {response}')
-                print(f'Client: Текст: {self.handle_response(response)}')
+                self.handle_response(response)
             except Exception as e:
                 print(f"Client: Error: {e}")
                 break
@@ -36,8 +41,6 @@ class Client:
             row, col = map(int, parts[1].split(';'))
             text = parts[2]
             self.text_buffer.insert_text(row, col, text)
-
-        return self.text_buffer.text
 
 
 if __name__ == '__main__':

@@ -1,3 +1,8 @@
+import sys
+import os
+
+# Добавляем корневую директорию проекта в путь поиска модулей
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import socket
 import threading
 from data.text_buffer import TextBuffer
@@ -8,14 +13,20 @@ class Server:
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(address)
         self.text_buffer = TextBuffer()
+        self.clients = []
 
     def start_server(self):
         self.server_socket.listen()
         while True:
             conn, addr = self.server_socket.accept()
+            self.clients.append(conn)
+            print(f"Server: Новый клиент подключен: {addr}")
             threading.Thread(target=self.handle_client, args=[conn]).start()
 
     def handle_client(self, client_socket):
+        initial_text = "\n".join(self.text_buffer.text)
+        client_socket.sendall(f"INSERT\n0;0\n{initial_text}".encode())
+
         try:
             while True:
                 data = client_socket.recv(4096)
@@ -26,10 +37,11 @@ class Server:
 
                 response = self.handle_message(message)
 
-                client_socket.sendall(response.encode())
+                self.broadcast_update(response)
         except Exception as e:
             print(f"Server: Ошибка: {e}")
         finally:
+            self.clients.remove(client_socket)
             client_socket.close()
 
     def handle_message(self, message: str) -> str:
@@ -42,6 +54,10 @@ class Server:
             self.text_buffer.insert_text(row, col, text)
 
         return message
+
+    def broadcast_update(self, message):
+        for client in self.clients:
+            client.sendall(message.encode())
 
 
 if __name__ == '__main__':
