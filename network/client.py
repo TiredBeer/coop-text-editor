@@ -6,6 +6,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import socket
 import threading
 from data.text_buffer import TextBuffer
+from ui.ui import UI
 
 
 class Client:
@@ -45,5 +46,7 @@ class Client:
 
 if __name__ == '__main__':
     client = Client()
-    client.connect_to_server(('127.0.0.1', 1488))
+    client.connect_to_server(('127.0.0.1', 1452))
+    ui = UI(client, client.text_buffer)
+    ui.run()
     client.send_message('INSERT\n0;0\nHello')

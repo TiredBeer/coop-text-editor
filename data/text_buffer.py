@@ -12,6 +12,9 @@ class TextBuffer:
         self.text[row] = line[:max(0, col - length)] + line[col:]
         print(f"TextBuffer: Текст после удаления: {self.text}")
 
+    def get_text(self):
+        return '\n'.join(self.text)
+
 
 if __name__ == '__main__':
     text_buffer = TextBuffer()

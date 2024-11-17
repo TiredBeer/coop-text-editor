@@ -57,9 +57,10 @@ class Server:
 
     def broadcast_update(self, message):
         for client in self.clients:
+            print(self.text_buffer.get_text())
             client.sendall(message.encode())
 
 
 if __name__ == '__main__':
-    server = Server(('127.0.0.1', 1488))
+    server = Server(('127.0.0.1', 1452))
     server.start_server()
