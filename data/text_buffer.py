@@ -1,10 +1,19 @@
 class TextBuffer:
     def __init__(self):
         self.text = ['']
+        self.cursor_row = 0
+        self.cursor_col = 0
+
+    def insert_init_text(self, row, col, text):
+        line = self.text[row]
+        self.text[row] = line[:col] + text + line[col:]
+        print(f"TextBuffer: Текст после вставки: {self.text}")
 
     def insert_text(self, row, col, text):
         line = self.text[row]
         self.text[row] = line[:col] + text + line[col:]
+        if row == self.cursor_row and col <= self.cursor_col:
+            self.cursor_col += len(text)
         print(f"TextBuffer: Текст после вставки: {self.text}")
 
     def delete_text(self, row, col, length):

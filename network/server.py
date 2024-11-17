@@ -25,7 +25,7 @@ class Server:
 
     def handle_client(self, client_socket):
         initial_text = "\n".join(self.text_buffer.text)
-        client_socket.sendall(f"INSERT\n0;0\n{initial_text}".encode())
+        client_socket.sendall(f"INSERT_INIT\n0;0\n{initial_text}".encode())
 
         try:
             while True:

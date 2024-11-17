@@ -42,6 +42,10 @@ class Client:
             row, col = map(int, parts[1].split(';'))
             text = parts[2]
             self.text_buffer.insert_text(row, col, text)
+        if command == 'INSERT_INIT':
+            row, col = map(int, parts[1].split(';'))
+            text = parts[2]
+            self.text_buffer.insert_init_text(row, col, text)
 
 
 if __name__ == '__main__':
