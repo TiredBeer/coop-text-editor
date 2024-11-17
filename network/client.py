@@ -1,10 +1,12 @@
 import socket
 import threading
+from data.text_buffer import TextBuffer
 
 
 class Client:
     def __init__(self):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.text_buffer = TextBuffer()
 
     def connect_to_server(self, address):
         self.client_socket.connect(address)
@@ -20,17 +22,25 @@ class Client:
                 if not data:
                     break
                 response = data.decode()
-                print(f'Получен ответ: {response}')
-                self.handle_response(response)
+                print(f'Client: Получен ответ: {response}')
+                print(f'Client: Текст: {self.handle_response(response)}')
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"Client: Error: {e}")
                 break
 
     def handle_response(self, response):
-        pass
+        parts = response.split('\n')
+        command = parts[0]
+
+        if command == 'INSERT':
+            row, col = map(int, parts[1].split(';'))
+            text = parts[2]
+            self.text_buffer.insert_text(row, col, text)
+
+        return self.text_buffer.text
 
 
 if __name__ == '__main__':
     client = Client()
     client.connect_to_server(('127.0.0.1', 1488))
-    client.send_message('Hello')
+    client.send_message('INSERT\n0;0\nHello')
