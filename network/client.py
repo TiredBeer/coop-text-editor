@@ -35,7 +35,7 @@ class Client:
                 break
 
     def handle_response(self, response):
-        parts = response.split('\n')
+        parts = response.split('\n', maxsplit=2)
         command = parts[0]
 
         if command == 'INSERT':
