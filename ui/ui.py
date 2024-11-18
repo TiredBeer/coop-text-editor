@@ -32,5 +32,28 @@ class UI:
     def handle_input(self, key):
         if key == -1:
             return
-        char = chr(key)
-        self.client.send_message(f"INSERT\n{self.text_buffer.cursor_row};{self.text_buffer.cursor_col}\n{char}")
+        elif key in [curses.KEY_RIGHT, curses.KEY_DOWN, curses.KEY_UP, curses.KEY_LEFT]:
+            self.move_cursor(key)
+        elif key == 10:
+            self.client.send_message(f"ENTER\n{self.text_buffer.cursor_row};{self.text_buffer.cursor_col}")
+        else:
+            char = chr(key)
+            self.client.send_message(f"KEY\n{key}")
+            self.client.send_message(f"INSERT\n{self.text_buffer.cursor_row};{self.text_buffer.cursor_col}\n{char}")
+
+    def move_cursor(self, key):
+        x = self.text_buffer.cursor_col
+        y = self.text_buffer.cursor_row
+        max_x = len(self.text_buffer.text[y])
+        max_y = len(self.text_buffer.text) - 1
+        if key == curses.KEY_RIGHT:
+            self.text_buffer.cursor_col = min(max_x, x + 1)
+        elif key == curses.KEY_LEFT:
+            self.text_buffer.cursor_col = max(0, x - 1)
+        elif key == curses.KEY_UP:
+            self.text_buffer.cursor_row = max(0, y - 1)
+        elif key == curses.KEY_DOWN:
+            self.text_buffer.cursor_row = min(max_y, y + 1)
+
+        if self.text_buffer.cursor_col > len(self.text_buffer.text[self.text_buffer.cursor_row]) - 1:
+            self.text_buffer.cursor_col = len(self.text_buffer.text[self.text_buffer.cursor_row])

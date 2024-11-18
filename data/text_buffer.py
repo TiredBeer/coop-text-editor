@@ -16,6 +16,13 @@ class TextBuffer:
             self.cursor_col += len(text)
         print(f"TextBuffer: Текст после вставки: {self.text}")
 
+    def enter(self, row, col):
+        line = self.text[row]
+        self.text[row] = line[:col]
+        self.text.insert(row + 1, line[col:])
+        self.cursor_row += 1
+        self.cursor_col = len(self.text[row + 1])
+
     def delete_text(self, row, col, length):
         line = self.text[row]
         self.text[row] = line[:max(0, col - length)] + line[col:]

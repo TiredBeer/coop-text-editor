@@ -13,13 +13,13 @@ class Server:
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(address)
         self.text_buffer = TextBuffer()
-        self.clients = []
+        self.clients = set()
 
     def start_server(self):
         self.server_socket.listen()
         while True:
             conn, addr = self.server_socket.accept()
-            self.clients.append(conn)
+            self.clients.add(conn)
             print(f"Server: Новый клиент подключен: {addr}")
             threading.Thread(target=self.handle_client, args=[conn]).start()
 
@@ -53,6 +53,10 @@ class Server:
             text = parts[2]
             self.text_buffer.insert_text(row, col, text)
 
+        if command == 'ENTER':
+            row, col = map(int, parts[1].split(';'))
+            self.text_buffer.enter(row, col)
+
         return message
 
     def broadcast_update(self, message):
@@ -62,5 +66,5 @@ class Server:
 
 
 if __name__ == '__main__':
-    server = Server(('127.0.0.1', 1452))
+    server = Server(('127.0.0.1', 1488))
     server.start_server()

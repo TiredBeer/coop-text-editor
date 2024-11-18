@@ -46,11 +46,14 @@ class Client:
             row, col = map(int, parts[1].split(';'))
             text = parts[2]
             self.text_buffer.insert_init_text(row, col, text)
+        if command == 'ENTER':
+            row, col = map(int, parts[1].split(';'))
+            self.text_buffer.enter(row, col)
 
 
 if __name__ == '__main__':
     client = Client()
-    client.connect_to_server(('127.0.0.1', 1452))
+    client.connect_to_server(('127.0.0.1', 1488))
     ui = UI(client, client.text_buffer)
     ui.run()
     client.send_message('INSERT\n0;0\nHello')
