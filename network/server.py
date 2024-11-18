@@ -52,10 +52,13 @@ class Server:
             row, col = map(int, parts[1].split(';'))
             text = parts[2]
             self.text_buffer.insert_text(row, col, text)
-
         if command == 'ENTER':
             row, col = map(int, parts[1].split(';'))
             self.text_buffer.enter(row, col)
+        if command == 'DELETE':
+            row, col = map(int, parts[1].split(';'))
+            length = int(parts[2])
+            self.text_buffer.delete_text(row, col, length)
 
         return message
 

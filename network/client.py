@@ -49,6 +49,10 @@ class Client:
         if command == 'ENTER':
             row, col = map(int, parts[1].split(';'))
             self.text_buffer.enter(row, col)
+        if command == 'DELETE':
+            row, col = map(int, parts[1].split(';'))
+            length = int(parts[2])
+            self.text_buffer.delete_text(row, col, length)
 
 
 if __name__ == '__main__':

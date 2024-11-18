@@ -36,6 +36,8 @@ class UI:
             self.move_cursor(key)
         elif key == 10:
             self.client.send_message(f"ENTER\n{self.text_buffer.cursor_row};{self.text_buffer.cursor_col}")
+        elif key == 8:
+            self.client.send_message(f"DELETE\n{self.text_buffer.cursor_row};{self.text_buffer.cursor_col}\n1")
         else:
             char = chr(key)
             self.client.send_message(f"KEY\n{key}")

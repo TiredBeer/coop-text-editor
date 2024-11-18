@@ -21,11 +21,18 @@ class TextBuffer:
         self.text[row] = line[:col]
         self.text.insert(row + 1, line[col:])
         self.cursor_row += 1
-        self.cursor_col = len(self.text[row + 1])
+        self.cursor_col = 0
 
     def delete_text(self, row, col, length):
         line = self.text[row]
         self.text[row] = line[:max(0, col - length)] + line[col:]
+        if col == 0:
+            self.cursor_row = max(0, self.cursor_row - 1)
+            self.cursor_col = len(self.text[self.cursor_row])
+            self.insert_init_text(self.cursor_row, self.cursor_col, self.text[row])
+            self.text.remove(self.text[row])
+        else:
+            self.cursor_col -= 1
         print(f"TextBuffer: Текст после удаления: {self.text}")
 
     def get_text(self):
