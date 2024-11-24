@@ -29,18 +29,18 @@ class Client:
                 if not data:
                     break
                 response = data.decode()
-                print(f'Client: Получен ответ: {response}')
+                # print(f'Client: Получен ответ: {response}')
                 self.handle_response(response)
             except Exception as e:
-                print(f"Client: Error: {e}")
+                # print(f"Client: Error: {e}")
                 break
 
     def handle_response(self, response):
         response = json.loads(response)
         self.text_buffer.text = response['TEXT']
-        self.text_buffer.cursor_position = response['POSITIONS']
-        print(f'Client: {self.client_socket.getsockname()[1]}')
-        cursor = self.text_buffer.cursor_position[str(self.client_socket.getsockname()[1])]
+        self.text_buffer.cursors = response['POSITIONS']
+        # print(f'Client: {self.client_socket.getsockname()[1]}')
+        cursor = self.text_buffer.cursors[str(self.client_socket.getsockname()[1])]
         self.text_buffer.cursor_row = cursor[0]
         self.text_buffer.cursor_col = cursor[1]
         # parts = response.split('\n', maxsplit=1)
@@ -70,4 +70,3 @@ if __name__ == '__main__':
     client.connect_to_server(('127.0.0.1', 1488))
     ui = UI(client, client.text_buffer)
     ui.run()
-    client.send_message('INSERT\n0;0\nHello')

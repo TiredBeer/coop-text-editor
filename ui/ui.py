@@ -12,7 +12,10 @@ class UI:
 
     def main(self, stdscr):
         self.screen = stdscr
-        curses.curs_set(1)
+        curses.start_color()
+        curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_YELLOW)
+        curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)
+        curses.curs_set(0)
         self.screen.nodelay(True)
         self.screen.clear()
         self.screen.refresh()
@@ -26,6 +29,7 @@ class UI:
         self.screen.clear()
         text = self.text_buffer.get_text()
         self.screen.addstr(text)
+        self.render_cursors(self.screen)
         self.screen.move(self.text_buffer.cursor_row, self.text_buffer.cursor_col)
         self.screen.refresh()
 
@@ -60,3 +64,17 @@ class UI:
 
         if self.text_buffer.cursor_col > len(self.text_buffer.text[self.text_buffer.cursor_row]) - 1:
             self.text_buffer.cursor_col = len(self.text_buffer.text[self.text_buffer.cursor_row])
+
+    def render_cursors(self, screen):
+        print(self.text_buffer.cursors)
+        for cursor in self.text_buffer.cursors:
+            color = 1
+            if cursor == str(self.client.client_socket.getsockname()[1]):
+                color = 2
+            cursor_row, cursor_col = self.text_buffer.cursors[cursor]
+            print(cursor_row, cursor_col)
+            try:
+                char = self.text_buffer.text[cursor_row][cursor_col]
+                screen.addch(cursor_row, cursor_col, char, curses.color_pair(color))
+            except IndexError:
+                screen.addch(cursor_row, cursor_col, ' ', curses.color_pair(color))
