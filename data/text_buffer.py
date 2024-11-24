@@ -30,19 +30,30 @@ class TextBuffer:
         for port in self.cursors:
             if port == client:
                 continue
-            if self.cursors[port][1] >= self.cursors[client][1] and self.cursors[port][0] >= self.cursors[client][0]:
+            if self.cursors[port][1] >= self.cursors[client][1] and \
+                    self.cursors[port][0] >= self.cursors[client][0]:
                 if self.cursors[port][0] == self.cursors[client][0]:
                     self.cursors[port][1] -= len_shift
                 if self.cursors[client][1] == 0:
                     if self.cursors[port][0] == self.cursors[client][0]:
-                        self.cursors[port][1] += len(self.text[self.cursors[port][0] - 1]) + 1
+                        self.cursors[port][1] += len(
+                            self.text[self.cursors[port][0] - 1]) + 1
                     self.cursors[port][0] -= 1
 
-
-
+    def move_other_cursors_when_enter(self, client):
+        for port in self.cursors:
+            if port == client:
+                continue
+            if self.cursors[port][0] == self.cursors[client][0] and \
+                    self.cursors[port][1] >= self.cursors[client][1]:
+                self.cursors[port][1] -= self.cursors[client][1]
+                self.cursors[port][0] += 1
+            elif self.cursors[port][0] > self.cursors[client][0]:
+                self.cursors[port][0] += 1
 
     def enter(self, row, col, client):
         line = self.text[row]
+        self.move_other_cursors_when_enter(client)
         self.text[row] = line[:col]
         self.text.insert(row + 1, line[col:])
         self.cursors[client][0] += 1
