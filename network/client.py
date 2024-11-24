@@ -29,40 +29,17 @@ class Client:
                 if not data:
                     break
                 response = data.decode()
-                # print(f'Client: Получен ответ: {response}')
                 self.handle_response(response)
             except Exception as e:
-                # print(f"Client: Error: {e}")
                 break
 
     def handle_response(self, response):
         response = json.loads(response)
         self.text_buffer.text = response['TEXT']
         self.text_buffer.cursors = response['POSITIONS']
-        # print(f'Client: {self.client_socket.getsockname()[1]}')
         cursor = self.text_buffer.cursors[str(self.client_socket.getsockname()[1])]
         self.text_buffer.cursor_row = cursor[0]
         self.text_buffer.cursor_col = cursor[1]
-        # parts = response.split('\n', maxsplit=1)
-        # command = parts[0]
-        # if command == 'TEXT':
-        #     self.text_buffer.text = parts[1].split()
-
-        # if command == 'INSERT':
-        #     row, col = map(int, parts[1].split(';'))
-        #     text = parts[2]
-        #     self.text_buffer.insert_text(row, col, text)
-        # if command == 'INSERT_INIT':
-        #     row, col = map(int, parts[1].split(';'))
-        #     text = parts[2]
-        #     self.text_buffer.insert_init_text(row, col, text)
-        # if command == 'ENTER':
-        #     row, col = map(int, parts[1].split(';'))
-        #     self.text_buffer.enter(row, col)
-        # if command == 'DELETE':
-        #     row, col = map(int, parts[1].split(';'))
-        #     length = int(parts[2])
-        #     self.text_buffer.delete_text(row, col, length)
 
 
 if __name__ == '__main__':
