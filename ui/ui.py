@@ -34,6 +34,7 @@ class UI:
             return
         elif key in [curses.KEY_RIGHT, curses.KEY_DOWN, curses.KEY_UP, curses.KEY_LEFT]:
             self.move_cursor(key)
+            self.client.send_message(f"UPDATE_POS\n{self.text_buffer.cursor_row};{self.text_buffer.cursor_col}")
         elif key == 10:
             self.client.send_message(f"ENTER\n{self.text_buffer.cursor_row};{self.text_buffer.cursor_col}")
         elif key == 8:

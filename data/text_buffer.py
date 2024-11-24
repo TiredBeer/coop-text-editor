@@ -3,36 +3,40 @@ class TextBuffer:
         self.text = ['']
         self.cursor_row = 0
         self.cursor_col = 0
+        self.cursors = {}
 
     def insert_init_text(self, row, col, text):
         line = self.text[row]
         self.text[row] = line[:col] + text + line[col:]
         print(f"TextBuffer: Текст после вставки: {self.text}")
 
-    def insert_text(self, row, col, text):
+    def insert_text(self, row, col, text, client):
         line = self.text[row]
         self.text[row] = line[:col] + text + line[col:]
-        if row == self.cursor_row and col <= self.cursor_col:
-            self.cursor_col += len(text)
+        if row == self.cursors[client][0] and col <= self.cursors[client][1]:
+            self.cursors[client][1] += len(text)
         print(f"TextBuffer: Текст после вставки: {self.text}")
 
-    def enter(self, row, col):
+    def enter(self, row, col, client):
         line = self.text[row]
         self.text[row] = line[:col]
         self.text.insert(row + 1, line[col:])
-        self.cursor_row += 1
-        self.cursor_col = 0
+        self.cursors[client][0] += 1
+        self.cursors[client][1] = 0
 
-    def delete_text(self, row, col, length):
+    def delete_text(self, row, col, length, client):
+        client_row = self.cursors[client][0]
+        client_col = self.cursors[client][1]
         line = self.text[row]
         self.text[row] = line[:max(0, col - length)] + line[col:]
         if col == 0:
-            self.cursor_row = max(0, self.cursor_row - 1)
-            self.cursor_col = len(self.text[self.cursor_row])
-            self.insert_init_text(self.cursor_row, self.cursor_col, self.text[row])
+            client_row = max(0, client_row - 1)
+            client_col = len(self.text[client_row])
+            self.insert_init_text(client_row, client_col, self.text[row])
             self.text.remove(self.text[row])
         else:
-            self.cursor_col -= 1
+            client_col -= 1
+        self.cursors[client] = [client_row, client_col]
         print(f"TextBuffer: Текст после удаления: {self.text}")
 
     def get_text(self):
